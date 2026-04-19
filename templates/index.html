@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartHealth AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="14" fill="#0d9e72" />
+          <path d="M14 7v14M7 14h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+        <span>SmartHealth AI</span>
+      </div>
+      <a href="/checker" class="btn-nav">Check Symptoms →</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="badge">🩺 AI-Powered Health Analysis</div>
+      <h1>Understand Your Symptoms<br /><span class="accent">Instantly.</span></h1>
+      <p class="hero-sub">Describe what you're feeling. Our AI analyzes your symptoms and gives you a clear, structured
+        preliminary health assessment — in seconds.</p>
+      <div class="hero-actions">
+        <a href="/checker" class="btn-primary">Start Symptom Check</a>
+        <a href="#how" class="btn-ghost">How it works</a>
+      </div>
+      <p class="hero-disclaimer">⚠ Not a substitute for professional medical advice. For emergencies call 112.</p>
+    </div>
+
+    <div class="hero-card">
+      <div class="mock-card">
+        <div class="mock-header">
+          <span class="mock-dot red"></span><span class="mock-dot amber"></span><span class="mock-dot green"></span>
+          <span class="mock-title">Analysis Result</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-urgency monitor">⚡ MONITOR</div>
+          <div class="mock-row"><span class="mock-label">Possible Conditions</span></div>
+          <div class="mock-chip high">Viral Flu <span>High</span></div>
+          <div class="mock-chip moderate">Common Cold <span>Moderate</span></div>
+          <div class="mock-chip low">Sinusitis <span>Low</span></div>
+          <div class="mock-row mt"><span class="mock-label">Self-Care Tips</span></div>
+          <div class="mock-tip">💧 Stay hydrated — drink 8+ glasses</div>
+          <div class="mock-tip">😴 Get 8–10 hours of rest</div>
+          <div class="mock-tip">🌡 Monitor your temperature</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Select Symptoms</h3>
+        <p>Pick from common symptoms or type your own. Add your age, sex, and duration.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>AI Analyzes</h3>
+        <p>Our advanced AI cross-references your symptoms against medical patterns instantly.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Get Results</h3>
+        <p>Receive a clear report: possible conditions, urgency level, and next steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>SmartHealth AI</p>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Symptom Checker — SmartHealth AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+</head>
+<body class="checker-page">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#0d9e72"/><path d="M14 7v14M7 14h14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span>SmartHealth AI</span>
+    </a>
+  </div>
+</nav>
+
+<div class="checker-layout">
+
+  <!-- ── LEFT: Input Panel ──────────────────────── -->
+  <aside class="panel-left">
+    <h2 class="panel-title">Symptom Checker</h2>
+    <p class="panel-sub">Select symptoms and fill in your profile for an AI health assessment.</p>
+
+    <!-- Symptom chips -->
+    <div class="field-group">
+      <label class="field-label">Common Symptoms <span class="label-hint">(select all that apply)</span></label>
+      <div class="chips-grid" id="chips-grid"></div>
+    </div>
+
+    <!-- Custom symptom -->
+    <div class="field-group">
+      <label class="field-label">Add custom symptom</label>
+      <div class="input-row">
+        <input type="text" id="custom-input" placeholder="e.g. blurred vision" class="text-input"/>
+        <button class="btn-add" onclick="addCustom()">Add</button>
+      </div>
+    </div>
+
+    <!-- Selected tags -->
+    <div class="field-group" id="selected-group" style="display:none">
+      <label class="field-label">Selected <span class="label-count" id="sel-count">0</span></label>
+      <div class="tags-row" id="tags-row"></div>
+    </div>
+
+    <!-- Profile -->
+    <div class="field-group">
+      <label class="field-label">Patient Profile</label>
+      <div class="profile-grid">
+        <div class="pfield">
+          <label>Age</label>
+          <input type="number" id="age" placeholder="e.g. 25" min="1" max="120" class="text-input small"/>
+        </div>
+        <div class="pfield">
+          <label>Sex</label>
+          <select id="sex" class="text-input small">
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="pfield">
+          <label>Severity (1–10)</label>
+          <input type="number" id="severity" placeholder="1–10" min="1" max="10" class="text-input small"/>
+        </div>
+        <div class="pfield full">
+          <label>Duration</label>
+          <input type="text" id="duration" placeholder="e.g. 3 days, 1 week" class="text-input"/>
+        </div>
+        <div class="pfield full">
+          <label>Known medical conditions <span class="label-hint">(optional)</span></label>
+          <input type="text" id="conditions" placeholder="e.g. diabetes, hypertension" class="text-input"/>
+        </div>
+        <div class="pfield full">
+          <label>Current medications <span class="label-hint">(optional)</span></label>
+          <input type="text" id="medications" placeholder="e.g. metformin, none" class="text-input"/>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-analyze" id="analyze-btn" onclick="analyze()">
+      <span id="btn-text">Analyze Symptoms →</span>
+      <span id="btn-loader" style="display:none">Analyzing<span class="dots"><span>.</span><span>.</span><span>.</span></span></span>
+    </button>
+
+    <p class="disclaimer-small">⚠ For informational use only. Not medical advice. Emergency? Call 112.</p>
+  </aside>
+
+  <!-- ── RIGHT: Results Panel ───────────────────── -->
+  <main class="panel-right" id="panel-right">
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🩺</div>
+      <h3>Your results will appear here</h3>
+      <p>Select your symptoms and fill in your profile, then click <strong>Analyze Symptoms</strong>.</p>
+    </div>
+
+    <!-- Results (hidden until loaded) -->
+    <div id="results" style="display:none">
+
+      <!-- Urgency banner -->
+      <div class="urgency-banner" id="urgency-banner">
+        <div class="urgency-icon" id="urgency-icon"></div>
+        <div>
+          <div class="urgency-label" id="urgency-label"></div>
+          <div class="urgency-reason" id="urgency-reason"></div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="result-section">
+        <h3 class="result-heading">🔍 Symptom Summary</h3>
+        <p id="r-summary" class="result-text"></p>
+      </div>
+
+      <!-- Conditions -->
+      <div class="result-section">
+        <h3 class="result-heading">🩺 Possible Conditions</h3>
+        <div id="r-conditions"></div>
+      </div>
+
+      <!-- Self-care + Warning signs side by side -->
+      <div class="two-col">
+        <div class="result-section">
+          <h3 class="result-heading">💊 Self-Care Tips</h3>
+          <ul id="r-selfcare" class="tip-list"></ul>
+        </div>
+        <div class="result-section">
+          <h3 class="result-heading">🚨 Warning Signs</h3>
+          <ul id="r-warnings" class="warning-list"></ul>
+        </div>
+      </div>
+
+      <!-- Next steps -->
+      <div class="result-section next-steps-box">
+        <h3 class="result-heading">📋 Recommended Next Steps</h3>
+        <p id="r-nextsteps" class="result-text"></p>
+      </div>
+
+      <!-- Disclaimer -->
+      <p class="result-disclaimer" id="r-disclaimer"></p>
+
+      <!-- Reset -->
+      <button class="btn-reset" onclick="resetForm()">← Check Again</button>
+    </div>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/checker.js') }}"></script>
+</body>
+</html>
