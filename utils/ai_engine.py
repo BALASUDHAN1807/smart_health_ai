@@ -3,7 +3,9 @@ import json
 from groq import Groq
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
-MODEL  = "llama-3.1-8b-instant"
+# Llama models on Groq are Enterprise-only; gpt-oss-20b is available on standard keys.
+# Override with the GROQ_MODEL environment variable if needed.
+MODEL  = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
 
 ANALYSIS_SYSTEM = """
 You are SmartHealth AI, a medical symptom analysis engine.
@@ -41,7 +43,7 @@ Rules:
 
 
 def analyze_symptoms(symptoms: list, profile: dict) -> dict:
-    """Send symptoms + profile to Groq (LLaMA 3) and return structured JSON result."""
+    """Send symptoms + profile to Groq and return structured JSON result."""
     
     # Check for missing or placeholder API key
     api_key = os.environ.get("GROQ_API_KEY", "")
@@ -75,10 +77,12 @@ Analyze these symptoms and return ONLY the JSON assessment.
                 {"role": "user",   "content": user_msg},
             ],
             temperature=0.3,
-            max_tokens=1500,
+            max_completion_tokens=4000,
+            reasoning_effort="low",
+            response_format={"type": "json_object"},
         )
 
-        raw = response.choices[0].message.content.strip()
+        raw = (response.choices[0].message.content or "").strip()
 
         # Strip accidental markdown fences if model adds them
         if raw.startswith("```"):
